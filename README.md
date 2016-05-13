@@ -7,7 +7,7 @@ Email: 	       joe@ctxrobotics.com
 ===========================================================
 
 <snippet>
-  <content><![CDATA[
+  <content>
 # Caffe NN with Jupyter 
 
 This directory is a learning sandbox for neural networks 
@@ -24,7 +24,6 @@ paths are hardcoded in.
 
 Requires caffe (http://caffe.berkeleyvision.org/) and 
 Jupyter notebooks (jupyter.org/) to run
-]]></content>
-  <tabTrigger>readme</tabTrigger>
+</content>
 </snippet>
 
