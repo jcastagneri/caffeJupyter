@@ -1,8 +1,14 @@
 
 ===========================================================
+
 Maintained by: Joe Castagneri
 Email: 	       joe@ctxrobotics.com
+
 ===========================================================
+
+<snippet>
+  <content><![CDATA[
+# Caffe NN with Jupyter 
 
 This directory is a learning sandbox for neural networks 
 driven by caffe either through Jupyter notebooks or c++
@@ -14,18 +20,10 @@ LMDB via the scripts located in the data/ directory. These
 scripts are meant to be run from their home directory as 
 paths are hardcoded in.
 
-<snippet>
-  <content><![CDATA[
-# ${1:Project Name}
-
-TODO: Write a project description
-
-## Installation
-
-TODO: Describe the installation process
-
 ## Usage
-TODO: Write usage instructions
+
+Requires caffe (http://caffe.berkeleyvision.org/) and 
+Jupyter notebooks (jupyter.org/) to run
 ]]></content>
   <tabTrigger>readme</tabTrigger>
 </snippet>
