@@ -1,0 +1,21 @@
+# The train/test net protocol buffer definition
+net: "caffeJupyter/simple.prototxt"
+# @param test_iter is num forward passes to carry out. Batch size was 50, so 10000/50=200
+test_iter: 200
+# @param test_interval: how many cycles between testing
+test_interval: 1000
+# base learning rate, momentum, weight decay
+base_lr: 0.03
+momentum: 0.0
+weight_decay: 0.0
+# learning rate policy 
+lr_policy: "fixed"
+# Display every 100
+display: 100
+# Maximum iterations
+max_iter: 10000
+# snapshot intermediate results
+snapshot: 5000
+snapshot_prefix: "caffeJupyter/simple"
+# solver mode
+solver_mode: GPU
