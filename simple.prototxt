@@ -1,4 +1,8 @@
 name: "Simple"
+# Initialize data from the mnist_train/test_lmdb file
+# We use a batch size of 10 for both training and testing,
+# and we scale greyscale input within the range [0,1)
+# via a division by 256
 layer {
   name: "mnist"
   type: "Data"
@@ -12,7 +16,7 @@ layer {
   }
   data_param {
     source: "caffeJupyter/mnist_train_lmdb"
-    batch_size: 50
+    batch_size: 10
     backend: LMDB
   }
 }
@@ -29,15 +33,17 @@ layer {
   }
   data_param {
     source: "caffeJupyter/mnist_test_lmdb"
-    batch_size: 50
+    batch_size: 10
     backend: LMDB
   }
 }
+# Hidden layer with 30 neurons. No learning rate schedule,
+# randomly allocated bias and weights.
 layer {
-  name: "ip"
+  name: "hiddenLayer"
   type: "InnerProduct"
   bottom: "data"
-  top: "ip"
+  top: "hiddenLayer"
   param {
     lr_mult: 1
   }
@@ -45,7 +51,7 @@ layer {
     lr_mult: 1
   }
   inner_product_param {
-    num_output: 2
+    num_output: 30
     weight_filler {
       type: "gaussian"
     }
@@ -54,20 +60,70 @@ layer {
     }
   }
 }
+# Definition of neuron type for hidden layer
+layer {
+  name: "hiddenLayerneuron"
+  type: "Sigmoid"
+  bottom: "hiddenLayer"
+  top: "hiddenLayerneuron"
+}
+# Output layer with 10 neurons, random bias/weight init.
+layer {
+  name: "outputLayer"
+  type: "InnerProduct"
+  bottom: "hiddenLayerneuron"
+  top: "outputLayer"
+  param {
+    lr_mult: 1
+  }
+  param {
+    lr_mult: 1
+  }
+  inner_product_param {
+    num_output: 10
+    weight_filler {
+      type: "gaussian"
+    }
+    bias_filler {
+      type: "gaussian"
+    }
+  }
+}
+# Neuron type for hidden layer
+layer {
+  name: "outputLayerNeuron"
+  type: "Sigmoid"
+  bottom: "outputLayer"
+  top: "outputLayerNeuron"
+}
+# In phase TEST, run validation (test) set against network for
+# accuracy percentage
 layer {
   name: "accuracy"
   type: "Accuracy"
-  bottom: "ip"
+  bottom: "outputLayerNeuron"
   bottom: "label"
   top: "accuracy"
   include {
     phase: TEST
   }
 }
+# Define loss function for the network. We will be using a softmax layer with
+# logistic loss to output probability densities for our classification.
+# In initial examples of neural networks, the euclidean cost is often used to
+# give intuition regarding network training. Caffe's implementation of euclidean
+# cost requires two inputs, the guess and the expected result, and both most be
+# the same size. Unfortunately, the MNIST data provided for this implementation
+# is not formatted for this to work effectively--our output layer is 10 nodes,
+# so we need the expected vectors tied to each image to also be vectors of length
+# 10 rather than fullsize 76 x 76 pixel images. With a differently employed
+# dataset, this would not be a problem.
+#
+# Softmax 
 layer {
   name: "loss"
   type: "SoftmaxWithLoss"
-  bottom: "ip"
+  bottom: "outputLayerNeuron"
   bottom: "label"
   top: "loss"
 }
